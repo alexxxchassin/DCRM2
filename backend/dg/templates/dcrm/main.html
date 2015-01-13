@@ -1,0 +1,45 @@
+<html> 
+	<head> 
+	<title>My Page</title> 
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.css" />
+	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
+	<script src="http://dcrm.derektest1.com:8000/static/frontend/dcrm.js"></script>
+</head> 
+<body> 
+
+<div data-role="page" id="home">
+    <div data-theme="a" data-role="header">
+        <h3>
+            Contact
+        </h3>
+    </div>        
+    <div data-role="content">
+        <div class="example-wrapper" data-iscroll>
+            <ul data-role="listview"  id="contact-list" data-theme="a">
+                
+            </ul>
+        </div>
+    </div>
+    <div data-theme="a" data-role="footer">
+        <h1>DCRM</h1>
+    </div>              
+</div>
+
+<div data-role="page" id="headline">
+    <div data-theme="a" data-role="header">
+        <a href="#home" class="ui-btn-left" data-transition="slide" data-direction="reverse">Back</a>                        
+        <h3>
+            Contact Info
+        </h3>
+    </div>        
+    <div data-role="content">
+        <ul data-role="listview"  id="contact-data" data-theme="a">
+            
+        </ul>
+    </div>
+</div>    
+
+</body>
+</html>
