@@ -183,12 +183,12 @@ $(document).on('pageinit', '#profile', function(){
             var recentSender = null;
                 timestamp = getLastTimestamp(messageData.messages[userPassed]);
                 recentSender = getLastSender(messageData.messages[userPassed]);
-               timestamp = timeConverter(timestamp);
+                timestamp = timeConverter(timestamp);
                 if (recentSender === null) {
                     $('#commhist').append('No messages yet...');
                 }
                 else {
-                $('#commhist').append("The last message was sent " + timestamp + " by "  + recentSender );
+                $('#commhist').append("The last message was sent " + timestamp + " by "  + recentSender.toLowerCase() );
                     }
             },
         error: function (request,error) {
