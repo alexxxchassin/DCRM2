@@ -9,6 +9,7 @@ function getLastTimestamp (messages) {
             }
             }
             return lastTime;
+            console.log(lastTime);
         }
 
 //converts unix timestamps to number of days ago
@@ -36,6 +37,20 @@ function timeConverter(unconvertedTime){
             }
             return lastSender;
         }
+//gets parameters from the URL
+function getUrlParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) 
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) 
+        {
+            return sParameterName[1];
+        }
+    }
+}          
 $(document).on('pageinit', '#home', function(){      
     var url = 'data1.json'       
     
@@ -50,7 +65,7 @@ $(document).on('pageinit', '#home', function(){
             $.each(result.messages, function(username, data){
                 timestamp = getLastTimestamp(data);
                 recentSender = getLastSender(data);
-                timestamp = timeConverter(timestamp);
+               timestamp = timeConverter(timestamp);
                 if (timestamp === "45 years ago") {
                     $('#contact-list').append('<li><a href="" data-id="' + username + '">' + username + '</a></li>');
                 }
@@ -73,6 +88,7 @@ var messageData = {
     id : null,
     messages : null
 }
+var userNameClicked = messageData.id;
 
 $(document).on('pagebeforeshow', '#headline', function(){      
     $('#contact-data').empty();
@@ -92,7 +108,7 @@ $(document).on('pagebeforeshow', '#headline', function(){
     });
 $("#profilelink").click(function(e) {
     e.preventDefault();
-    window.location.href = $(this).attr("href") + '?' + messageData.id;
+    window.location.href = $(this).attr("href") +'?' + "user=" + messageData.id;
 });
 });
 
@@ -127,9 +143,10 @@ $("#profilelink").click(function(e) {
 
 $(document).on('vclick', '#contact-list li a', function(){  
     messageData.id = $(this).attr('data-id');
+    userNameClicked = $(this).attr('data-id');
     $.mobile.changePage( "#headline", { transition: "slide", changeHash: false });
-
 });
+
 
 $(document).on('pageinit', '#profile', function(){      
     var url = 'data1.json'       
@@ -148,15 +165,18 @@ $(document).on('pageinit', '#profile', function(){
                 timestamp = timeConverter(timestamp);
                 if (timestamp === "45 years ago" && recentSender === messageData.id) {
                     $('#commhist').append('No messages yet...');
-                    console.log("if" + timestamp + recentSender + messageData.id);
-                    $("#profileusername").append(messageData.id);
+                    console.log("if" + timestamp + recentSender + userNameClicked);
+
                 }
                 else if (recentSender === messageData.id && timestamp !== "45 years ago") {
-                    console.log("elseif" + timestamp + recentSender + messageData.id);
-                    $('#profileusername').append('<li>' + messageData.id + '</li>');
+                    console.log("elseif" + timestamp + recentSender + userNameClicked);
+                   
 
                 $('#commhist').append('<li>The last message was sent '+ timestamp +' by ' + recentSender.toLowerCase() +' </li>');
 
             }
-
+            
+var userPassed = getUrlParameter(user);
+$('#profileusername').append(userPassed);
+           
             });
