@@ -28,10 +28,10 @@
     </div>              
 </div>
 
-<div data-role="page" id="headline">
+<div data-role="page" id="contact-info">
     <div data-theme="a" data-role="header">
         <a href="#home" class="ui-btn-left" data-transition="slide" data-direction="reverse">Back</a>
-        <a href="profile.html" class="ui-btn-right" data-transition="slide" data-direction="reverse" id="profilelink">Profile</a>                        
+        <a href="#profile" class="ui-btn-right" data-transition="slide" data-direction="reverse" id="profilelink">Profile</a>                        
         <h3>
             Contact Info
         </h3>
@@ -42,6 +42,98 @@
         </ul>
     </div>
 </div>    
+
+
+<div data-role="page" data-control-title="Profile" id="profile">
+    <div data-theme="a" data-role="header">
+        <h4 id="DCRM" class="DCRM">
+            DCRM
+        </h4>
+        <a href="#contact-info" class="ui-btn-left" data-transition="slide" data-direction="reverse">Back</a>
+    </div>
+    <div role="main" class="ui-content">
+        <img src="https://codiqa.com/static/images/v2/image.png" alt="image" data-controltype="image">
+        <img src="https://codiqa.com/static/images/v2/image.png" alt="image" data-controltype="image">
+        <div data-controltype="textblock">
+        <p style="text-align: left;">
+                    <span style="font-size: 24px;" id="profileusername">
+                        
+                    </span>
+                </a>
+            </p>
+           
+        </div>
+        <div data-controltype="textblock">
+            <p style="text-align: left;">
+                <a data-mce-href="http://www.dcrmbeta.com" href="http://www.dcrmbeta.com"
+                style="">
+                    <span style="font-size: x-small;">
+                        <b>
+                            Edit name
+                        </b>
+                    </span>
+                </a>
+            </p>
+        </div>
+        <hr style="height:3px; background-color:#ccc; border:0; margin-top:12px; margin-bottom:12px;">
+        <div data-controltype="textblock">
+            <p style="text-align: center;">
+                <b>
+                    Level of Interest
+                </b>
+            </p>
+        </div>
+        <div class="ui-field-contain" data-controltype="slider">
+            <label for="slider1">
+                Value
+            </label>
+            <input id="slider1" type="range" name="slider" value="10" min="1" max="10"
+            data-highlight="false">
+        </div>
+        <hr style="height:3px; background-color:#ccc; border:0; margin-top:12px; margin-bottom:12px;">
+        <div data-controltype="textblock">
+            <p style="text-align: center;">
+                <b>
+                    Group
+                </b>
+            </p>
+        </div>
+        <div class="ui-field-contain" data-controltype="selectmenu">
+            <select id="selectmenu1" name="" data-mini="true">
+                <option value="initial">
+                    Initial
+                </option>
+                <option value="conversation">
+                    Conversation
+                </option>
+                <option value="scheduledate">
+                    Schedule Date
+                </option>
+                <option value="archive">
+                    Archive
+                </option>
+                <option value="unsorted">
+                    Unsorted
+                </option>
+            </select>
+        </div>
+        <hr style="height:3px; background-color:#ccc; border:0; margin-top:12px; margin-bottom:12px;">
+        <div data-controltype="textblock">
+            <p style="text-align: center;">
+                <b>
+                    Communication Summary
+                </b>
+            </p>
+        </div>
+        <div data-controltype="textblock" id="commhist">
+            <p>
+                <span style="font-size: small;" data-mce-style="font-size: small;">
+                </span>
+            </p>
+        </div>
+    </div>
+</div>   
+
 
 </body>
 </html>

@@ -1,78 +1,83 @@
 // function to calculate the most recent timestamp for each bundle of messages from a given user
 function getLastTimestamp (messages) {
-        var lastTime = null;
-        var lastSender = null;
-        for (message in messages) {
-            if(!lastTime || lastTime < messages[message].time_stamp) {
-                lastTime = messages[message].time_stamp
-                
-            }
-            }
-            return lastTime;
-            console.log(lastTime);
+    var lastTime = null;
+    var lastSender = null;
+    for (message in messages) {
+        if(!lastTime || lastTime < messages[message].time_stamp) {
+            lastTime = messages[message].time_stamp
+            
         }
+    }
+    return lastTime;
+}
 
 //converts unix timestamps to number of days ago
 function timeConverter(unconvertedTime){
-  var time = moment(unconvertedTime * 1000).fromNow()
-  return time
+    var time = moment(unconvertedTime * 1000).fromNow();
+    return time;
 }
         // function to calculate the most recent sender for a message
 
-        function getLastSender (messages) {
-        var lastTime = null;
-        var lastSender = null;
-        for (message in messages) {
-            if(!lastTime || lastTime < messages[message].time_stamp) {
-                lastSender = messages[message].sender;
-                
-            }
-            if(lastSender === "GregNYC2014") {
-                lastSender = "You"
-            }
-            else
-                {
-                    lastSender = "Them"
-                }
-            }
-            return lastSender;
+function getLastSender (messages) {
+    var lastTime = null;
+    var lastSender = null;
+    for (message in messages) {
+        if (!lastTime || lastTime < messages[message].time_stamp) {
+            lastSender = messages[message].sender;
+            
         }
+        if (lastSender === "GregNYC2014") {
+            lastSender = "You"
+        } else {
+                lastSender = "Them"
+        }
+    }
+    return lastSender;
+}
+
+function getUser(users, userName) {
+    for (i = 0; i < users.length; i++) { 
+        if (users[i].username === userName) {
+            return users[i];
+        }
+    }
+    return null;
+}
+
 //gets parameters from the URL
 function getUrlParameter(sParam)
 {
     var sPageURL = window.location.search.substring(1);
     var sURLVariables = sPageURL.split('?'); 
-    for (var i = 0; i < sURLVariables.length; i++) 
-    {
+    for (var i = 0; i < sURLVariables.length; i++) {
         var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) 
-        {
+        if (sParameterName[0] == sParam) {
             return sParameterName[1];   
         }
     }
-}          
+}
+
 $(document).on('pageinit', '#home', function(){      
-    var url = 'data1.json'       
+    var url = 'http://dcrm.derektest1.com/data/?id=1'       
     
     $.ajax({
         url: url,
-        dataType: "json",
+        dataType: "jsonp",
         async: true,
         success: function (result) {
-            messageData.messages = result.messages;
+            messageData.users = result.users;
             var timestamp = null;
             var recentSender = null;
-            $.each(result.messages, function(username, data){
-                timestamp = getLastTimestamp(data);
-                recentSender = getLastSender(data);
-               timestamp = timeConverter(timestamp);
+            $.each(result.users, function(i, user){
+                timestamp = getLastTimestamp(user.messages);
+                recentSender = getLastSender(user.messages);
+                timestamp = timeConverter(timestamp);
                 if (timestamp === "45 years ago") {
-                    $('#contact-list').append('<li><a href="" data-id="' + username + '">' + username + '</a></li>');
+                    $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
                 }
                 else {
-
-                $('#contact-list').append('<li><a href="" data-id="' + username + '">' + username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
-            }
+                    $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
+                }
             });
 
             $('#contact-list').listview('refresh');
@@ -85,32 +90,22 @@ $(document).on('pageinit', '#home', function(){
 });
 
 var messageData = {
-    id : null,
-    messages : null
+    users : null
 }
-var userNameClicked = messageData.id;
+var userNameClicked = null;
 
-$(document).on('pagebeforeshow', '#headline', function(){      
+$(document).on('pagebeforeshow', '#contact-info', function(){      
     $('#contact-data').empty();
     // This loops through each of the users in the list to find the one that was clicked
-    $.each(messageData.messages, function(id, data) {
-        if(id == messageData.id) {
+    $.each(messageData.users, function(i, user) {
+        if(user.username == userNameClicked) {
             // This loops through each "message", which is the text one person sends to another
-            $.each(data, function(i, message) {
+            $.each(user.messages, function(i, message) {
                 $('#contact-data').append('<li>' + message.sender + ': ' + message.content + '</li>');
-                
             });
-                
-            $('#contact-data').listview('refresh');
-                        
+            $('#contact-data').listview('refresh');  
         }
-
     });
-$("#profilelink").click(function(e) {
-    e.preventDefault();
-    window.location.href = $(this).attr("href") +'?' + "user=" + messageData.id;
-
-});
 });
 
 
@@ -143,9 +138,8 @@ $("#profilelink").click(function(e) {
 
 
 $(document).on('vclick', '#contact-list li a', function(){  
-    messageData.id = $(this).attr('data-id');
     userNameClicked = $(this).attr('data-id');
-    $.mobile.changePage( "#headline", { transition: "slide", changeHash: false });
+    $.mobile.changePage( "#contact-info", { transition: "slide", changeHash: false });
 });
 
 
@@ -168,31 +162,23 @@ $('#profileusername').append("<strong>" + userPassed + "</strong>");
             });
 
 */
-$(document).on('pageinit', '#profile', function(){      
-    var url = 'data1.json'   
-    var userPassed = getUrlParameter("user");    
-    $('#profileusername').append("<strong>" + userPassed + "</strong>");
 
-    $.ajax({
-        url: url,
-        dataType: "json",
-        async: true,
-        success: function (result) {
-            messageData.messages = result.messages;
-            var timestamp = null;
-            var recentSender = null;
-                timestamp = getLastTimestamp(messageData.messages[userPassed]);
-                recentSender = getLastSender(messageData.messages[userPassed]);
-                timestamp = timeConverter(timestamp);
-                if (recentSender === null) {
-                    $('#commhist').append('No messages yet...');
-                }
-                else {
-                $('#commhist').append("The last message was sent " + timestamp + " by "  + recentSender.toLowerCase() );
-                    }
-            },
-        error: function (request,error) {
-            alert('Network error has occurred please try again!');        
-        }
-});
+
+
+$(document).on('pageinit', '#profile', function(){      
+    var url = 'data1.json'
+    var user = getUser(messageData.users, userNameClicked);
+
+    $('#profileusername').append("<strong>" + user.username + "</strong>");
+
+    var timestamp = null;
+    var recentSender = null;
+    timestamp = getLastTimestamp(user.messages);
+    recentSender = getLastSender(user.messages);
+    timestamp = timeConverter(timestamp);
+    if (recentSender === null) {
+        $('#commhist').append('No messages yet...');
+    } else {
+        $('#commhist').append("The last message was sent " + timestamp + " by "  + recentSender.toLowerCase() );
+    }
 });
