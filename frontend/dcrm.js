@@ -43,6 +43,21 @@ function getUser(users, userName) {
     }
     return null;
 }
+//sorts messages by parameter
+function messageSorter(field, reverse, primer) {
+console.log("I'm working!")
+   var key = primer ? 
+       function(x) {return primer(x[field])} : 
+       function(x) {return x[field]};
+
+   reverse = [-1, 1][+!!reverse];
+
+   return function (a, b) {
+       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+     } 
+     $('#contact-list').listview('refresh');
+     console.log(messageData.users);
+};
 
 //gets parameters from the URL
 function getUrlParameter(sParam)
@@ -109,6 +124,7 @@ $(document).on('pagebeforeshow', '#contact-info', function(){
 });
 
 
+
 /* $(document).on('pageinit', '#headline', function(){      
     $('#contact-data').empty();
      This loops through each of the users in the list to find the one that was clicked
@@ -136,12 +152,15 @@ $("#profilelink").click(function(e) {
 });
 }); */
 
-
+//displays the contact info page with the messaging history for the individual user
 $(document).on('vclick', '#contact-list li a', function(){  
     userNameClicked = $(this).attr('data-id');
     $.mobile.changePage( "#contact-info", { transition: "slide", changeHash: false });
 });
 
+$(document).on('vclick', '#newsort', function() {
+      messageData.sort(messageSorter(messages[time_stamp],true, parseInt));
+});
 
 /* $(document).on('pageinit', '#profile', function(){      
     var url = 'data1.json'
@@ -168,8 +187,15 @@ $('#profileusername').append("<strong>" + userPassed + "</strong>");
 $(document).on('pageinit', '#profile', function(){      
     var url = 'data1.json'
     var user = getUser(messageData.users, userNameClicked);
+    var profileimg = user.profile_url
 
     $('#profileusername').append("<strong>" + user.username + "</strong>");
+    $('#profileimage').attr("src",profileimg);
+
+    if (user.serice === "okc") {
+    $('#servicelogo').attr("src","okc_icon.png");
+    
+    }
 
     var timestamp = null;
     var recentSender = null;
