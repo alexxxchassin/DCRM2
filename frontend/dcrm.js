@@ -43,21 +43,15 @@ function getUser(users, userName) {
     }
     return null;
 }
-//sorts messages by parameter
-function messageSorter(field, reverse, primer) {
+//sorts messages for display
+function messageSorter(sortType) {
 console.log("I'm working!")
-   var key = primer ? 
-       function(x) {return primer(x[field])} : 
-       function(x) {return x[field]};
-
-   reverse = [-1, 1][+!!reverse];
-
-   return function (a, b) {
-       return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
-     } 
-     $('#contact-list').listview('refresh');
-     console.log(messageData.users);
-};
+if (sortType === "newsort") {
+for (i = 0; i < users.length; i++) { 
+   user[i].lastMsgTimestamp = getLastTimestamp(user[i].messages);
+   }
+}
+}
 
 //gets parameters from the URL
 function getUrlParameter(sParam)
@@ -153,14 +147,15 @@ $("#profilelink").click(function(e) {
 }); */
 
 //displays the contact info page with the messaging history for the individual user
-$(document).on('vclick', '#contact-list li a', function(){  
+$(document).on('click', '#contact-list li a', function(){  
     userNameClicked = $(this).attr('data-id');
     $.mobile.changePage( "#contact-info", { transition: "slide", changeHash: false });
 });
 
-$(document).on('vclick', '#newsort', function() {
-      messageData.sort(messageSorter(user.messages[time_stamp],true, parseInt));
-      console.log("the link was clicked")
+$(document).on('click', '#newsort', function(){  
+    var sortType = 'newsort'
+    messageSorter(sortType);
+    console.log(sortType);
 });
 
 /* $(document).on('pageinit', '#profile', function(){      
@@ -182,7 +177,6 @@ $('#profileusername').append("<strong>" + userPassed + "</strong>");
             });
 
 */
-
 
 
 $(document).on('pageinit', '#profile', function(){      
@@ -210,4 +204,17 @@ $(document).on('pageinit', '#profile', function(){
     } else {
         $('#commhist').append(recentSender + " sent the last message " + timestamp + ".");
     }
+    
+    });
+
+$(document).on('change', '#interestslider', function(){ 
+    var user = getUser(messageData.users, userNameClicked);
+    user.interestLevel = $(this).val()
+    console.log(user)
+});
+
+$(document).on('change', '#groupmenu', function(){ 
+    var user = getUser(messageData.users, userNameClicked);
+    user.group = $(this).val()
+    console.log(user)
 });
