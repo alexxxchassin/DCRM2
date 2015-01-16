@@ -29,7 +29,7 @@ function getLastSender (messages) {
         if (lastSender === "GregNYC2014") {
             lastSender = "You"
         } else {
-                lastSender = "Them"
+                lastSender = "Her"
         }
     }
     return lastSender;
@@ -159,7 +159,8 @@ $(document).on('vclick', '#contact-list li a', function(){
 });
 
 $(document).on('vclick', '#newsort', function() {
-      messageData.sort(messageSorter(messages[time_stamp],true, parseInt));
+      messageData.sort(messageSorter(user.messages[time_stamp],true, parseInt));
+      console.log("the link was clicked")
 });
 
 /* $(document).on('pageinit', '#profile', function(){      
@@ -194,17 +195,19 @@ $(document).on('pageinit', '#profile', function(){
 
     if (user.serice === "okc") {
     $('#servicelogo').attr("src","okc_icon.png");
-    
     }
 
     var timestamp = null;
     var recentSender = null;
     timestamp = getLastTimestamp(user.messages);
     recentSender = getLastSender(user.messages);
+    if (recentSender === "Her") {
+        recentSender = "She"
+    }
     timestamp = timeConverter(timestamp);
     if (recentSender === null) {
         $('#commhist').append('No messages yet...');
     } else {
-        $('#commhist').append("The last message was sent " + timestamp + " by "  + recentSender.toLowerCase() );
+        $('#commhist').append(recentSender + " sent the last message " + timestamp + ".");
     }
 });
