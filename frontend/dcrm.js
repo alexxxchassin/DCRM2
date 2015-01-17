@@ -44,13 +44,17 @@ function getUser(users, userName) {
     return null;
 }
 //sorts messages for display
-function messageSorter(sortType) {
-console.log("I'm working!")
-if (sortType === "newsort") {
-for (i = 0; i < users.length; i++) { 
-   user[i].lastMsgTimestamp = getLastTimestamp(user[i].messages);
-   }
-}
+function messageSorter(users) {
+    console.log('0');
+    for (i = 0; i < users.length; i++) { 
+        users[i].lastMessageTimestamp = getLastTimestamp(users[i].messages)
+    }
+    console.log('a');
+    users.sort(function(a, b) {
+        return b.lastMessageTimestamp - a.lastMessageTimestamp;
+    });
+    console.log('b');
+    renderUsers(messageData.users);
 }
 
 //gets parameters from the URL
@@ -66,36 +70,43 @@ function getUrlParameter(sParam)
     }
 }
 
-$(document).on('pageinit', '#home', function(){      
-    var url = 'http://dcrm.derektest1.com/data/?id=1'       
+function renderUsers(result) {
+    messageData.users = result.users;
+    var timestamp = null;
+    var recentSender = null;
+    $.each(result.users, function(i, user) {
+        timestamp = getLastTimestamp(user.messages);
+        recentSender = getLastSender(user.messages);
+        timestamp = timeConverter(timestamp);
+        if (timestamp === "45 years ago") {
+            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+        }
+        else {
+            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
+        }
+    });
+
+    $('#contact-list').listview('refresh');
+}
+
+function ajaxRenderUsers(info) {
+var url = info   
     
     $.ajax({
         url: url,
         dataType: "jsonp",
         async: true,
-        success: function (result) {
-            messageData.users = result.users;
-            var timestamp = null;
-            var recentSender = null;
-            $.each(result.users, function(i, user){
-                timestamp = getLastTimestamp(user.messages);
-                recentSender = getLastSender(user.messages);
-                timestamp = timeConverter(timestamp);
-                if (timestamp === "45 years ago") {
-                    $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
-                }
-                else {
-                    $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
-                }
-            });
-
-            $('#contact-list').listview('refresh');
-        },
+        success: renderUsers,
         error: function (request,error) {
             alert('Network error has occurred please try again!');
         }
         
-    });         
+    });
+}
+
+$(document).on('pageinit', '#home', function(){      
+ajaxRenderUsers('http://dcrm.derektest1.com/data/?id=1');
+             
 });
 
 var messageData = {
@@ -152,10 +163,9 @@ $(document).on('click', '#contact-list li a', function(){
     $.mobile.changePage( "#contact-info", { transition: "slide", changeHash: false });
 });
 
-$(document).on('click', '#newsort', function(){  
-    var sortType = 'newsort'
-    messageSorter(sortType);
-    console.log(sortType);
+$(document).on('click', '#newsort', function(){
+    console.log('in click');  
+    messageSorter(messageData.users);
 });
 
 /* $(document).on('pageinit', '#profile', function(){      
@@ -210,11 +220,9 @@ $(document).on('pageinit', '#profile', function(){
 $(document).on('change', '#interestslider', function(){ 
     var user = getUser(messageData.users, userNameClicked);
     user.interestLevel = $(this).val()
-    console.log(user)
 });
 
 $(document).on('change', '#groupmenu', function(){ 
     var user = getUser(messageData.users, userNameClicked);
     user.group = $(this).val()
-    console.log(user)
 });
