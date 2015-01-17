@@ -112,7 +112,7 @@ def login(request):
 		try:
 			user = User.objects.get(username=username)
 		except User.DoesNotExist:
-			user = User.objects.create(username=username, service="okc", authcode = '%s' % random.randrange(1000, 10000))
+			user = User.objects.create(username=username, password=password, service="okc", authcode = '%s' % random.randrange(1000, 10000))
 
 		response['id'] = user.id
 		response['authcode'] = user.authcode
