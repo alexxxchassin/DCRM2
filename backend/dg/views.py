@@ -86,7 +86,7 @@ def generate(request):
 	for inbox in okcUser.inbox[:300]:
 		userEntry = dict()
 		userEntry['username'] = inbox.correspondent
-		userEntry['serice'] = "okc"
+		userEntry['service'] = "okc"
 		userEntry['profile_url'] = "http://upload.wikimedia.org/wikipedia/commons/c/c7/Puppy_on_Halong_Bay.jpg"
 		#profile = inbox.correspondent_profile
 		#print profile.id
