@@ -75,7 +75,12 @@ def populateData(user, okcUser):
 		userEntry['username'] = inbox.correspondent
 		userEntry['service'] = "okc"
 
-		photoInfos = inbox.correspondent_profile.photo_infos
+		
+		try:
+			photoInfos = inbox.correspondent_profile.photo_infos
+		except:
+			photoInfos = list()
+				
 		if len(photoInfos) > 0:
 			userEntry['profile_url'] = photoInfos[0].jpg_uri
 		else:
