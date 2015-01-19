@@ -89,8 +89,17 @@ function renderUsers(result) {
     $('#contact-list').listview('refresh');
 }
 
+var idAccessCode = null
+
+function afterLogin(result) {
+
+$.mobile.changePage( "#home", { transition: "pop", changeHash: false });
+idAccessCode = result;
+}
+
 function ajaxRenderUsers(info) {
-var url = info   
+var url = "http://dcrm.derektest1.com/data/" + info.id + info.accesscode
+console.log(url)
     
     $.ajax({
         url: url,
@@ -104,8 +113,25 @@ var url = info
     });
 }
 
+$(document).on('click', '#loginbutton', function(){      
+var url = "http://dcrm.derektest1.com/login/"
+var userinfo = $("#loginform").serialize()
+ $.ajax({
+        url: url,
+        data: userinfo,
+        type: "get",
+        dataType: "json",
+        success: afterLogin(result),
+        error: function (request,error) {
+            alert('Network error has occurred please try again!');
+        }
+    });
+ console.log(userinfo)
+ console.log(url)
+ });
+
 $(document).on('pageinit', '#home', function(){      
-ajaxRenderUsers('http://dcrm.derektest1.com/data/?id=1');
+ajaxRenderUsers();
              
 });
 
