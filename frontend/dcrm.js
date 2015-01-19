@@ -92,9 +92,9 @@ function renderUsers(result) {
 var idAccessCode = null
 
 function afterLogin(result) {
-
-$.mobile.changePage( "#home", { transition: "pop", changeHash: false });
 idAccessCode = result;
+console.log(idAccessCode);
+$.mobile.changePage( "#home", { transition: "pop", changeHash: false });
 }
 
 function ajaxRenderUsers(info) {
@@ -121,7 +121,7 @@ var userinfo = $("#loginform").serialize()
         data: userinfo,
         type: "get",
         dataType: "json",
-        success: afterLogin(result),
+        success: afterLogin,
         error: function (request,error) {
             alert('Network error has occurred please try again!');
         }
