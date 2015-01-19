@@ -74,9 +74,13 @@ def populateData(user, okcUser):
 		userEntry = dict()
 		userEntry['username'] = inbox.correspondent
 		userEntry['service'] = "okc"
-		userEntry['profile_url'] = "http://upload.wikimedia.org/wikipedia/commons/c/c7/Puppy_on_Halong_Bay.jpg"
-		#profile = inbox.correspondent_profile
-		#print profile.id
+
+		photoInfos = inbox.correspondent_profile.photo_infos
+		if len(photoInfos) > 0:
+			userEntry['profile_url'] = photoInfos[0].jpg_uri
+		else:
+			userEntry['profile_url'] = "http://upload.wikimedia.org/wikipedia/commons/c/c7/Puppy_on_Halong_Bay.jpg"
+
 		messages = list()
 		if inbox.has_messages:
 			for msg in inbox.messages:
@@ -141,6 +145,8 @@ def generate(request):
 	okcUser = okcupyd.User(session)
 	
 	populateData(user, okcUser)
+
+	response['data'] = json.loads(user.data_json)
 	
 	return HttpResponse(json.dumps(response, cls=DCRMJsonEncoder), content_type="application/json")
 
