@@ -45,16 +45,40 @@ function getUser(users, userName) {
 }
 //sorts messages for display
 function messageSorter(users) {
-    console.log('0');
     for (i = 0; i < users.length; i++) { 
         users[i].lastMessageTimestamp = getLastTimestamp(users[i].messages)
     }
-    console.log('a');
     users.sort(function(a, b) {
         return b.lastMessageTimestamp - a.lastMessageTimestamp;
     });
-    console.log('b');
-    renderUsers(messageData.users);
+    $('#contact-list').empty();
+    $.each(messageData.users, function(i, user) {
+        timestamp = getLastTimestamp(user.messages);
+        recentSender = getLastSender(user.messages);
+        timestamp = timeConverter(timestamp);
+        if (timestamp === "45 years ago") {
+            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+        }
+        else {
+            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
+        }
+    });
+
+    $('#contact-list').listview('refresh');
+}
+
+function matchSorter(users) {
+    $('#contact-list').empty();
+    $.each(messageData.users, function(i, user) {
+        timestamp = getLastTimestamp(user.messages);
+        recentSender = getLastSender(user.messages);
+        timestamp = timeConverter(timestamp);
+        if (timestamp === "45 years ago") {
+            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+        }
+    });
+
+    $('#contact-list').listview('refresh');
 }
 
 //gets parameters from the URL
@@ -79,7 +103,7 @@ function renderUsers(result) {
         recentSender = getLastSender(user.messages);
         timestamp = timeConverter(timestamp);
         if (timestamp === "45 years ago") {
-            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+            $('#contact-list').append('<li><img src="' + user.profile_url + '" align="middle" alt="image" data-controltype="image" id="contactlistimage" height="30" width="30"><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
         }
         else {
             $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
@@ -94,12 +118,10 @@ var idAuthCode = null
 function afterLogin(result) {
 idAuthCode = result;
 $.mobile.changePage( "#home", { transition: "slide", changeHash: false });
-console.log(idAuthCode);
 }
 
 function ajaxRenderUsers(info) {
 var url = "http://dcrm.derektest1.com/data/?" + "id=" + info.id + "&authcode=" + info.authcode
-console.log(url)
     $.ajax({
         url: url,
         dataType: "jsonp",
@@ -130,7 +152,8 @@ var userinfo = $("#loginform").serialize()
  });
 
 $(document).on('pagebeforeshow', '#home', function(){      
-ajaxRenderUsers(idAuthCode);  
+ajaxRenderUsers(idAuthCode);
+$('#contact-list').empty();  
 });
 
 var messageData = {
@@ -185,12 +208,14 @@ $("#profilelink").click(function(e) {
 $(document).on('click', '#contact-list li a', function(){  
     userNameClicked = $(this).attr('data-id');
     $.mobile.changePage( "#contact-info", { transition: "slide", changeHash: false });
-    console.log(userNameClicked);
+});
+//sorts the users by most recent message first
+$(document).on('click', '#newsort', function(){
+    messageSorter(messageData.users);
 });
 
-$(document).on('click', '#newsort', function(){
-    console.log('in click');  
-    messageSorter(messageData.users);
+$(document).on('click', '#matchsort', function(){
+    matchSorter(messageData.users);
 });
 
 /* $(document).on('pageinit', '#profile', function(){      
@@ -223,8 +248,6 @@ $(document).on('pagebeforeshow', '#profile', function(){
     $('#commhist').empty();
     var user = getUser(messageData.users, userNameClicked);
     var profileimg = user.profile_url
-    console.log(user);
-    console.log(user.username)
 
     $('#profileusername').append("<strong>" + user.username + "</strong>");
     $('#profileimage').attr("src",profileimg);
@@ -252,11 +275,9 @@ $(document).on('pagebeforeshow', '#profile', function(){
 $(document).on('change', '#interestslider', function(){ 
     var user = getUser(messageData.users, userNameClicked);
     user.interestLevel = $(this).val();
-    console.log(user);
 });
 
 $(document).on('change', '#groupmenu', function(){ 
     var user = getUser(messageData.users, userNameClicked);
     user.group = $(this).val();
-    console.log(user);
 });
