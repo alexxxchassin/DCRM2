@@ -89,18 +89,17 @@ function renderUsers(result) {
     $('#contact-list').listview('refresh');
 }
 
-var idAccessCode = null
+var idAuthCode = null
 
 function afterLogin(result) {
-idAccessCode = result;
-console.log(idAccessCode);
-$.mobile.changePage( "#home", { transition: "pop", changeHash: false });
+idAuthCode = result;
+$.mobile.changePage( "#home", { transition: "slide", changeHash: false });
+console.log(idAuthCode);
 }
 
 function ajaxRenderUsers(info) {
-var url = "http://dcrm.derektest1.com/data/" + info.id + info.accesscode
+var url = "http://dcrm.derektest1.com/data/?" + "id=" + info.id + "&authcode=" + info.authcode
 console.log(url)
-    
     $.ajax({
         url: url,
         dataType: "jsonp",
@@ -113,26 +112,25 @@ console.log(url)
     });
 }
 
-$(document).on('click', '#loginbutton', function(){      
+$(document).on('click', '#loginbutton', function(event){      
 var url = "http://dcrm.derektest1.com/login/"
 var userinfo = $("#loginform").serialize()
+ event.preventDefault()
  $.ajax({
         url: url,
         data: userinfo,
         type: "get",
-        dataType: "json",
+        async: true,
+        dataType: "jsonp",
         success: afterLogin,
         error: function (request,error) {
             alert('Network error has occurred please try again!');
         }
     });
- console.log(userinfo)
- console.log(url)
  });
 
-$(document).on('pageinit', '#home', function(){      
-ajaxRenderUsers();
-             
+$(document).on('pagebeforeshow', '#home', function(){      
+ajaxRenderUsers(idAuthCode);  
 });
 
 var messageData = {
@@ -187,6 +185,7 @@ $("#profilelink").click(function(e) {
 $(document).on('click', '#contact-list li a', function(){  
     userNameClicked = $(this).attr('data-id');
     $.mobile.changePage( "#contact-info", { transition: "slide", changeHash: false });
+    console.log(userNameClicked);
 });
 
 $(document).on('click', '#newsort', function(){
@@ -215,15 +214,22 @@ $('#profileusername').append("<strong>" + userPassed + "</strong>");
 */
 
 
-$(document).on('pageinit', '#profile', function(){      
-    var url = 'data1.json'
+$(document).on('pagebeforeshow', '#profile', function(){      
+    //var url = 'data1.json'
+    $('#profileusername').empty();
+    $('#profileimage').empty();
+    $('#contact-data').empty();
+    $('#servicelogo').empty();
+    $('#commhist').empty();
     var user = getUser(messageData.users, userNameClicked);
     var profileimg = user.profile_url
+    console.log(user);
+    console.log(user.username)
 
     $('#profileusername').append("<strong>" + user.username + "</strong>");
     $('#profileimage').attr("src",profileimg);
 
-    if (user.serice === "okc") {
+    if (user.service === "okc") {
     $('#servicelogo').attr("src","okc_icon.png");
     }
 
@@ -245,10 +251,12 @@ $(document).on('pageinit', '#profile', function(){
 
 $(document).on('change', '#interestslider', function(){ 
     var user = getUser(messageData.users, userNameClicked);
-    user.interestLevel = $(this).val()
+    user.interestLevel = $(this).val();
+    console.log(user);
 });
 
 $(document).on('change', '#groupmenu', function(){ 
     var user = getUser(messageData.users, userNameClicked);
-    user.group = $(this).val()
+    user.group = $(this).val();
+    console.log(user);
 });
