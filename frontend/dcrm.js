@@ -271,16 +271,24 @@ $(document).on('pagebeforeshow', '#profile', function(){
     } else {
         $('#commhist').append(recentSender + " sent the last message " + timestamp + ".");
     }
+
+user.statusLevel = $("#statusset :radio:checked").val();
+console.log(user.statusLevel)
 });
 
-$(document).on('click', '#talkingradio', function(){ 
-    var user = getUser(messageData.users, userNameClicked);
-    user.statusLevel = $(this).val();
-    console.log(user.statusLevel)
-});
+//$(document).on('click', '#talkingradio', function(){ 
+  //  var user = getUser(messageData.users, userNameClicked);
+    //user.statusLevel = $(this).val();
+    //console.log(user.statusLevel)
+//});
 
-$('#interestselect input:radio').change(function () {
-    var user = getUser(messageData.users, userNameClicked);
-    user.interestLevel = $("#interestselect input:radio:checked").val();
-    console.log(user.interestLevel);
-});
+//$('input[name=Talk]').change(function(){
+//var user = getUser(messageData.users, userNameClicked);
+//user.statusLevel = $( 'input[name=Talk]:checked' ).val();
+//console.log(user.statusLevel);
+//});
+//$('#interestselect input:radio').change(function () {
+  //  var user = getUser(messageData.users, userNameClicked);
+    //user.interestLevel = $("#interestselect input:radio:checked").val();
+    //console.log(user.interestLevel);
+//});

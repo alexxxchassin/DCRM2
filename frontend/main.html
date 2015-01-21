@@ -173,17 +173,18 @@ text-align:center;">
                 </b>
             </p>
         </div>
-        <div data-role="fieldcontain" id="statusselect">
-        <fieldset data-role="controlgroup" data-type="horizontal">
-                <input type="radio" name="Initial" id="initialradio" value="initial" />
+        <div data-role="fieldcontain">
+        <fieldset data-role="controlgroup" id="statusset" data-type="horizontal">
+        <form>
+                <input type="radio" name="statusbutton" id="initialradio" value="intro" />
                    <label for="initialradio">Intro</label>
-                   <input type="radio" name="Talking" id="talkingradio" value="talking" />
-                   <label for="talkingradio">Talk</label>
-                   <input type="radio" name="Meet" id="meetradio" value="meet" />
+                   <input type="radio" name="statusbutton" id="talkradio" value="talk" />
+                   <label for="talkradio">Talk</label>
+                   <input type="radio" name="statusbutton" id="meetradio" value="meet" />
                    <label for="meetradio">Meet</label>
-                   <input type="radio" name="Archive" id="archiveradio" value="archive" />
+                   <input type="radio" name="statusbutton" id="archiveradio" value="archive" />
                    <label for="archiveradio">Archive</label>
-                   
+        </form>                 
                    </fieldset>
         </div>
              <!--   <option value="conversation">
