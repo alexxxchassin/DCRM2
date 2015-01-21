@@ -2,7 +2,7 @@
 	<head> 
 	<title>DCRM Beta</title> 
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
-	<link rel="stylesheet" href="http://www.dcrmbeta.com/themes/jquery.mobile-1.1.1.css" />
+	<link rel="stylesheet" href="jquery.mobile-1.1.1.css" />
 	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
 	<script src="http://code.jquery.com/mobile/1.1.1/jquery.mobile-1.1.1.min.js"></script>
 	<script src="dcrm.js"></script>
@@ -164,19 +164,27 @@ text-align:center;">
             data-highlight="false">
         </div>
         <hr style="height:3px; background-color:#ccc; border:0; margin-top:12px; margin-bottom:12px;">
-        <div data-controltype="textblock">
+        <!---<div data-controltype="textblock">
             <p style="text-align: center;">
                 <b>
                     Group
                 </b>
             </p>
+        </div> ---->
+        <div data-role="fieldcontain">
+        <fieldset data-role="controlgroup" data-type="horizontal">
+        <legend>Group</legend>
+                <input type="radio" name="Initial" id="initialradio" value="initial" />
+                   <label for="initialradio">Initial</label>
+                   <input type="radio" name="Talking" id="talkingradio" value="conversation" />
+                   <label for="talkingradio">Talking</label>
+                   <input type="radio" name="Meet" id="meetradio" value="meet" />
+                   <label for="meetradio">Meet</label>
+                   <input type="radio" name="Unsorted" id="unsortedradio" value="unsorted" checked="checked" />
+                   <label for="unsortedradio">Unsorted</label>
+                   </fieldset>
         </div>
-        <div class="ui-field-contain" data-controltype="selectmenu">
-            <select id="groupmenu" name="" data-mini="true">
-                <option value="initial">
-                    Initial
-                </option>
-                <option value="conversation">
+             <!--   <option value="conversation">
                     Conversation
                 </option>
                 <option value="scheduledate">
@@ -189,7 +197,7 @@ text-align:center;">
                     Unsorted
                 </option>
             </select>
-        </div>
+        </div> -->
         <hr style="height:3px; background-color:#ccc; border:0; margin-top:12px; margin-bottom:12px;">
         <div data-controltype="textblock">
             <p style="text-align: center;">

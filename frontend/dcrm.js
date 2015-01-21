@@ -103,8 +103,10 @@ function renderUsers(result) {
         recentSender = getLastSender(user.messages);
         timestamp = timeConverter(timestamp);
         if (timestamp === "45 years ago") {
-            $('#contact-list').append('<li><img src="' + user.profile_url + '" align="middle" alt="image" data-controltype="image" id="contactlistimage" height="30" width="30"><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
-        }
+          $('#contact-list').append('<li><p class="profileimagewrapper"><img src="' + user.profile_url + '" alt="image" id="contactlistimage" height="30" width="30"></p><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+        } 
+        //$('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+       // }
         else {
             $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
         }
