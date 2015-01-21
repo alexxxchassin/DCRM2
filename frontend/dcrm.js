@@ -177,7 +177,19 @@ $(document).on('pagebeforeshow', '#contact-info', function(){
     });
 });
 
-
+$(document).on('click', '#refreshbutton', function() {
+var url = "http://dcrm.derektest1.com/generate/?" + "id=" + idAuthCode.id
+console.log(url)
+       $.ajax({
+        url: url,
+        dataType: "jsonp",
+        async: true,
+        success: alert("Refresh in progress"),
+        error: function (request,error) {
+            alert('Network error has occurred please try again!');
+        }
+});
+});
 
 /* $(document).on('pageinit', '#headline', function(){      
     $('#contact-data').empty();
@@ -242,13 +254,13 @@ $('#profileusername').append("<strong>" + userPassed + "</strong>");
 
 
 $(document).on('pagebeforeshow', '#profile', function(){      
-    //var url = 'data1.json'
     $('#profileusername').empty();
     $('#profileimage').empty();
     $('#contact-data').empty();
     $('#servicelogo').empty();
     $('#commhist').empty();
     var user = getUser(messageData.users, userNameClicked);
+    console.log(user);
     var profileimg = user.profile_url
 
     $('#profileusername').append("<strong>" + user.username + "</strong>");
@@ -271,24 +283,21 @@ $(document).on('pagebeforeshow', '#profile', function(){
     } else {
         $('#commhist').append(recentSender + " sent the last message " + timestamp + ".");
     }
-
-user.statusLevel = $("#statusset :radio:checked").val();
-console.log(user.statusLevel)
+$('input[type=radio][value=' + user.interestLevel + ']').attr('checked', true);
+$('input[type=radio][value=' + user.statusLevel + ']').attr('checked', true);
 });
 
-//$(document).on('click', '#talkingradio', function(){ 
-  //  var user = getUser(messageData.users, userNameClicked);
-    //user.statusLevel = $(this).val();
-    //console.log(user.statusLevel)
-//});
+//sets the interest level of each user on the profile page
+$(document).on('click','#interestselect', function() {
+var user = getUser(messageData.users, userNameClicked)
+user.interestLevel = $('input[name=interestbutton]:checked').val()
+console.log(user)
+});
 
-//$('input[name=Talk]').change(function(){
-//var user = getUser(messageData.users, userNameClicked);
-//user.statusLevel = $( 'input[name=Talk]:checked' ).val();
-//console.log(user.statusLevel);
-//});
-//$('#interestselect input:radio').change(function () {
-  //  var user = getUser(messageData.users, userNameClicked);
-    //user.interestLevel = $("#interestselect input:radio:checked").val();
-    //console.log(user.interestLevel);
-//});
+//sets the status of each user on the profile page
+$(document).on('click','#statusselect', function() {
+var user = getUser(messageData.users, userNameClicked)
+user.statusLevel = $('input[name=statusbutton]:checked').val()
+console.log(user)
+});
+

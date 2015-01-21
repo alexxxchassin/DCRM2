@@ -46,8 +46,9 @@ text-align:center;">
 
 <div data-role="page" id="home">
     <div data-theme="a" data-role="header">
+     <a id="refreshbutton" class="ui-btn-right" data-transition="pop">Refresh</a>
         <h3>
-            CONTACTS
+            INBOX
         </h3>
     </div>  
     <div data-role="navbar" data-theme="a">
@@ -156,15 +157,17 @@ text-align:center;">
                 </b>
             </p>
         </div>
-         <div data-role="fieldcontain" id="interestselect">
-        <fieldset data-role="controlgroup" data-type="horizontal">
-        <input type="radio" name="Yes" id="yesradio" value="yes" />
+         <div data-role="fieldcontain">
+        <fieldset data-role="controlgroup" id="interestselect" data-type="horizontal">
+        <form>
+        <input type="radio" name="interestbutton" id="yesradio" value="yes" />
                    <label for="yesradio">Yes</label>
-                <input type="radio" name="Maybe" id="mayberadio" value="maybe" />
+                <input type="radio" name="interestbutton" id="mayberadio" value="maybe" />
                    <label for="mayberadio">Maybe</label>
-                   <input type="radio" name="No" id="noradio" value="no" />
+                   <input type="radio" name="interestbutton" id="noradio" value="no" />
                    <label for="noradio">No</label>                   
                    </fieldset>
+                   </form>
         </div>
          <div data-controltype="textblock">
             <p style="text-align: center;">
@@ -174,7 +177,7 @@ text-align:center;">
             </p>
         </div>
         <div data-role="fieldcontain">
-        <fieldset data-role="controlgroup" id="statusset" data-type="horizontal">
+        <fieldset data-role="controlgroup" id="statusselect" data-type="horizontal">
         <form>
                 <input type="radio" name="statusbutton" id="initialradio" value="intro" />
                    <label for="initialradio">Intro</label>
@@ -184,8 +187,8 @@ text-align:center;">
                    <label for="meetradio">Meet</label>
                    <input type="radio" name="statusbutton" id="archiveradio" value="archive" />
                    <label for="archiveradio">Archive</label>
-        </form>                 
                    </fieldset>
+                   </form>
         </div>
              <!--   <option value="conversation">
                     Conversation
