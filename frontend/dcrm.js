@@ -103,10 +103,10 @@ function renderUsers(result) {
         recentSender = getLastSender(user.messages);
         timestamp = timeConverter(timestamp);
         if (timestamp === "45 years ago") {
-          $('#contact-list').append('<li><p class="profileimagewrapper"><img src="' + user.profile_url + '" alt="image" id="contactlistimage" height="30" width="30"></p><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
-        } 
-        //$('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
-       // }
+        //  $('#contact-list').append('<li><p class="profileimagewrapper"><img src="' + user.profile_url + '" alt="image" id="contactlistimage" height="30" width="30"></p><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+       // } 
+        $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+       }
         else {
             $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
         }
@@ -271,15 +271,16 @@ $(document).on('pagebeforeshow', '#profile', function(){
     } else {
         $('#commhist').append(recentSender + " sent the last message " + timestamp + ".");
     }
-    
-    });
-
-$(document).on('change', '#interestslider', function(){ 
-    var user = getUser(messageData.users, userNameClicked);
-    user.interestLevel = $(this).val();
 });
 
-$(document).on('change', '#groupmenu', function(){ 
+$(document).on('click', '#talkingradio', function(){ 
     var user = getUser(messageData.users, userNameClicked);
-    user.group = $(this).val();
+    user.statusLevel = $(this).val();
+    console.log(user.statusLevel)
+});
+
+$('#interestselect input:radio').change(function () {
+    var user = getUser(messageData.users, userNameClicked);
+    user.interestLevel = $("#interestselect input:radio:checked").val();
+    console.log(user.interestLevel);
 });

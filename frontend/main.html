@@ -156,32 +156,34 @@ text-align:center;">
                 </b>
             </p>
         </div>
-        <div class="ui-field-contain" data-controltype="slider">
-            <label for="slider1">
-                Value
-            </label>
-            <input id="interestslider" type="range" name="slider" value="10" min="1" max="10"
-            data-highlight="false">
+         <div data-role="fieldcontain" id="interestselect">
+        <fieldset data-role="controlgroup" data-type="horizontal">
+        <input type="radio" name="Yes" id="yesradio" value="yes" />
+                   <label for="yesradio">Yes</label>
+                <input type="radio" name="Maybe" id="mayberadio" value="maybe" />
+                   <label for="mayberadio">Maybe</label>
+                   <input type="radio" name="No" id="noradio" value="no" />
+                   <label for="noradio">No</label>                   
+                   </fieldset>
         </div>
-        <hr style="height:3px; background-color:#ccc; border:0; margin-top:12px; margin-bottom:12px;">
-        <!---<div data-controltype="textblock">
+         <div data-controltype="textblock">
             <p style="text-align: center;">
                 <b>
-                    Group
+                    Status
                 </b>
             </p>
-        </div> ---->
-        <div data-role="fieldcontain">
+        </div>
+        <div data-role="fieldcontain" id="statusselect">
         <fieldset data-role="controlgroup" data-type="horizontal">
-        <legend>Group</legend>
                 <input type="radio" name="Initial" id="initialradio" value="initial" />
-                   <label for="initialradio">Initial</label>
-                   <input type="radio" name="Talking" id="talkingradio" value="conversation" />
+                   <label for="initialradio">Intro</label>
+                   <input type="radio" name="Talking" id="talkingradio" value="talking" />
                    <label for="talkingradio">Talking</label>
                    <input type="radio" name="Meet" id="meetradio" value="meet" />
                    <label for="meetradio">Meet</label>
-                   <input type="radio" name="Unsorted" id="unsortedradio" value="unsorted" checked="checked" />
-                   <label for="unsortedradio">Unsorted</label>
+                   <input type="radio" name="Archive" id="archiveradio" value="archive" />
+                   <label for="archiveradio">Archive</label>
+                   
                    </fieldset>
         </div>
              <!--   <option value="conversation">
