@@ -137,7 +137,6 @@ var url = "http://dcrm.derektest1.com/data/?" + "id=" + info.id + "&authcode=" +
 }
 
 function interestSorter(info) {
-var users = info
     for(var i=0; i<users.length ; i++) {
         users.append("<li>"+users.interestLevel[i]+"</li>");
 
