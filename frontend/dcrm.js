@@ -147,8 +147,11 @@ interestSort.listview({
             var interest = user.interestLevel
             return (user.interestLevel)
         }
-    })$("#contact-list").listview("refresh");
+    })
 
+$("#contact-list").listview("refresh");
+
+}
 }
 
 $(document).on('click', '#loginbutton', function(event){      
