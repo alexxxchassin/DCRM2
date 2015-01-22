@@ -57,10 +57,10 @@ function messageSorter(users) {
         recentSender = getLastSender(user.messages);
         timestamp = timeConverter(timestamp);
         if (timestamp === "45 years ago") {
-            $('#contact-list').append('<li><img class="ui-li-thumb" src="' + user.profile_url + '" alt="image" id="contactlistimage_' + user.username+ '" height="30" width="30"><a href="" data-id="' + user.username + '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + user.username + '</a></li>');
+            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
         }
         else {
-            $('#contact-list').append('<li><img class="ui-li-thumb" src="' + user.profile_url + '" alt="image" id="contactlistimage_' + user.username+ '" height="30" width="30"><a href="" data-id="' + user.username + '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
+            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
         }
     });
 
@@ -74,7 +74,7 @@ function matchSorter(users) {
         recentSender = getLastSender(user.messages);
         timestamp = timeConverter(timestamp);
         if (timestamp === "45 years ago") {
-            $('#contact-list').append('<li><img class="ui-li-thumb" src="' + user.profile_url + '" alt="image" id="contactlistimage_' + user.username+ '" height="30" width="30"><a href="" data-id="' + user.username + '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + user.username + '</a></li>');
+            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
         }
     });
 
@@ -103,12 +103,12 @@ function renderUsers(result) {
         recentSender = getLastSender(user.messages);
         timestamp = timeConverter(timestamp);
         if (timestamp === "45 years ago") {
-         $('#contact-list').append('<li><img class="ui-li-thumb" src="' + user.profile_url + '" alt="image" id="contactlistimage_' + user.username+ '" height="30" width="30"><a href="" data-id="' + user.username + '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + user.username + '</a></li>');
-        } 
-       // $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
-       //}
+        //  $('#contact-list').append('<li><p class="profileimagewrapper"><img src="' + user.profile_url + '" alt="image" id="contactlistimage" height="30" width="30"></p><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+       // } 
+        $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + '</a></li>');
+       }
         else {
-            $('#contact-list').append('<li><img class="ui-li-thumb" src="' + user.profile_url + '" alt="image" id="contactlistimage_' + user.username+ '" height="30" width="30"><a href="" data-id="' + user.username + '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
+            $('#contact-list').append('<li><a href="" data-id="' + user.username + '">' + user.username + ' - '+ timestamp +' - '+ recentSender +'</a></li>');
         }
     });
 
@@ -136,21 +136,6 @@ var url = "http://dcrm.derektest1.com/data/?" + "id=" + info.id + "&authcode=" +
     });
 }
 
-function interestSorter(info) {
-var users = info
-    for(var i=0; i<users.length ; i++) {
-        users.append("<li>"+users.interestLevel[i]+"</li>");
-
-interestSort.listview({
-        autodividers:true,
-        autodividersSelector: function ( li ) {
-            var interest = user.interestLevel
-            return (user.interestLevel)
-        }
-    })$("#contact-list").listview("refresh");
-
-}
-
 $(document).on('click', '#loginbutton', function(event){      
 var url = "http://dcrm.derektest1.com/login/"
 var userinfo = $("#loginform").serialize()
@@ -170,7 +155,7 @@ var userinfo = $("#loginform").serialize()
 
 $(document).on('pagebeforeshow', '#home', function(){      
 ajaxRenderUsers(idAuthCode);
-$('#contact-list').empty();
+$('#contact-list').empty();  
 });
 
 var messageData = {
@@ -247,10 +232,6 @@ $(document).on('click', '#matchsort', function(){
     matchSorter(messageData.users);
 });
 
-$(document).on('click','#interestsort', function(){
-interestSorter(messageData.users);
-});
-
 /* $(document).on('pageinit', '#profile', function(){      
     var url = 'data1.json'
     var userPassed = getUrlParameter("user");
@@ -281,12 +262,8 @@ $(document).on('pagebeforeshow', '#profile', function(){
     var user = getUser(messageData.users, userNameClicked);
     console.log(user);
     var profileimg = user.profile_url
-    if (user.displayName === undefined) {
+
     $('#profileusername').append("<strong>" + user.username + "</strong>");
-    }
-    else {
-     $('#profileusername').append("<strong>" + user.displayName + "</strong>");   
-    }
     $('#profileimage').attr("src",profileimg);
 
     if (user.service === "okc") {
@@ -314,17 +291,13 @@ $('input[type=radio][value=' + user.statusLevel + ']').attr('checked', true);
 $(document).on('click','#interestselect', function() {
 var user = getUser(messageData.users, userNameClicked)
 user.interestLevel = $('input[name=interestbutton]:checked').val()
+console.log(user)
 });
 
 //sets the status of each user on the profile page
 $(document).on('click','#statusselect', function() {
 var user = getUser(messageData.users, userNameClicked)
 user.statusLevel = $('input[name=statusbutton]:checked').val()
+console.log(user)
 });
 
-$(document).on('click','#nameedit',function() {
-var user = getUser(messageData.users, userNameClicked);
-user.displayName = prompt("Enter a new name");
-$('#profileusername').empty();
-$('#profileusername').append("<strong>" + user.displayName + "</strong>");
-});
