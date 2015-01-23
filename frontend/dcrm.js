@@ -74,7 +74,7 @@ function matchSorter(users) {
         recentSender = getLastSender(user.messages);
         timestamp = timeConverter(timestamp);
         if (timestamp === "45 years ago") {
-            $('#contact-list').append('<li><img class="ui-li-thumb" src="' + user.profile_url + '" alt="image" id="contactlistimage_' + user.username+ '" height="30" width="30"><a href="" data-id="' + user.username + '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + user.username + '</a></li>');
+            $('#contact-list').append('<li><img class="ui-li-thumb" src="' + user.profile_url + '" alt="image" id="contactlistimage_' + user.username + '" height="30" width="30"><a href="" data-id="' + user.username + '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + user.username + '</a></li>');
         }
     });
 
@@ -113,6 +113,7 @@ function renderUsers(result) {
     });
 
     $('#contact-list').listview('refresh');
+    messageSorter(messageData.users);
 }
 
 var idAuthCode = null
@@ -146,12 +147,57 @@ interestSort.listview({
             var interest = user.interestLevel
             return (user.interestLevel)
         }
-    })
-
+    });
 $("#contact-list").listview("refresh");
 
 }
 }
+
+function renderProfile(username, hist) {
+    $('#profileusername').empty();
+    $('#profileimage').empty();
+    $('#contact-data').empty();
+    $('#servicelogo').empty();
+    $('#commhist').empty();
+    var user = getUser(messageData.users, username);
+    console.log(user);
+    var profileimg = user.profile_url
+    if (user.displayName === undefined) {
+    $('#profileusername').append("<strong>" + user.username + "</strong>");
+    }
+    else {
+     $('#profileusername').append("<strong>" + user.displayName + "</strong>");   
+    }
+    $('#profileimage').attr("src",profileimg);
+
+    if (user.service === "okc") {
+    $('#servicelogo').attr("src","okc_icon.png");
+    }
+
+    var timestamp = null;
+    var recentSender = null;
+    timestamp = getLastTimestamp(user.messages);
+    recentSender = getLastSender(user.messages);
+    if (recentSender === "Her") {
+        recentSender = "She"
+    }
+    if (hist === "Y") {
+        $("#profilenav").hide();
+    timestamp = timeConverter(timestamp);
+    if (recentSender === null) {
+        $('#commhist').append('No messages yet...');
+    } else {
+        $('#commhist').append(recentSender + " sent the last message " + timestamp + ".");
+    }
+}
+else {
+$("#historycontainer").hide();
+}
+
+$('input[type=radio][value=' + user.interestLevel + ']').attr('checked', true);
+$('input[type=radio][value=' + user.statusLevel + ']').attr('checked', true);
+}
+
 
 $(document).on('click', '#loginbutton', function(event){      
 var url = "http://dcrm.derektest1.com/login/"
@@ -208,33 +254,6 @@ console.log(url)
 });
 });
 
-/* $(document).on('pageinit', '#headline', function(){      
-    $('#contact-data').empty();
-     This loops through each of the users in the list to find the one that was clicked
-    $.each(messageData.messages, function(id, data) {
-        if(id == messageData.id) {
-             This loops through each "message", which is the text one person sends to another
-          $.each(data, function(i, message) {
-               var argument1 = message.sender;
-            var p = $.param({argument1:argument1});
-                console.log(p);
-               $('#profilelink').attr({'href': _href + '?' + p});
-                
-            });
-                
-            $('#contact-data').listview('refresh');
-                        
-        }
-   });
-}); */
-/*$(document).ready(function()) {
-$("#profilelink").click(function(e) {
-    e.preventDefault();
-    window.location.href = $(this).attr("href") + '?' + message.sender;
-    console.log(message.sender);
-});
-}); */
-
 //displays the contact info page with the messaging history for the individual user
 $(document).on('click', '#contact-list li a', function(){  
     userNameClicked = $(this).attr('data-id');
@@ -253,63 +272,21 @@ $(document).on('click','#interestsort', function(){
 interestSorter(messageData.users);
 });
 
-/* $(document).on('pageinit', '#profile', function(){      
-    var url = 'data1.json'
-    var userPassed = getUrlParameter("user");
-    console.log(userPassed + " top")     
-    timestamp = getLastTimestamp(messageData[userPassed])
-    console.log(messageData[userPassed])
-    //recentSender = getLastSender(messageData[userPassed])
-    console.log(messageData.userPassed)
-                if (timestamp === "45 years ago") {
-                    $('#commhist').append('No messages yet...');
+//$(document).on('pagebeforeshow', '#profile', function(){      
+//renderProfile(userNameClicked,hist);
+//});
 
-                }
-                else { 
-                $('#commhist').append('<li>The last message was sent '+ timestamp +' by ' + recentSender.toLowerCase() + ' </li>');
-            };
-$('#profileusername').append("<strong>" + userPassed + "</strong>");        
-            });
+$(document).on('click','#profilelink', function() {
+var hist = "Y"
+$.mobile.changePage( "#profile", { transition: "slide"});
+renderProfile(userNameClicked,hist);
+});
 
-*/
-
-
-$(document).on('pagebeforeshow', '#profile', function(){      
-    $('#profileusername').empty();
-    $('#profileimage').empty();
-    $('#contact-data').empty();
-    $('#servicelogo').empty();
-    $('#commhist').empty();
-    var user = getUser(messageData.users, userNameClicked);
-    console.log(user);
-    var profileimg = user.profile_url
-    if (user.displayName === undefined) {
-    $('#profileusername').append("<strong>" + user.username + "</strong>");
-    }
-    else {
-     $('#profileusername').append("<strong>" + user.displayName + "</strong>");   
-    }
-    $('#profileimage').attr("src",profileimg);
-
-    if (user.service === "okc") {
-    $('#servicelogo').attr("src","okc_icon.png");
-    }
-
-    var timestamp = null;
-    var recentSender = null;
-    timestamp = getLastTimestamp(user.messages);
-    recentSender = getLastSender(user.messages);
-    if (recentSender === "Her") {
-        recentSender = "She"
-    }
-    timestamp = timeConverter(timestamp);
-    if (recentSender === null) {
-        $('#commhist').append('No messages yet...');
-    } else {
-        $('#commhist').append(recentSender + " sent the last message " + timestamp + ".");
-    }
-$('input[type=radio][value=' + user.interestLevel + ']').attr('checked', true);
-$('input[type=radio][value=' + user.statusLevel + ']').attr('checked', true);
+$(document).on('click','#assignbutton', function() {
+var hist = "N"
+var firstUser = messageData.users[0].username
+$.mobile.changePage( "#profile", { transition: "slide"});
+renderProfile(firstUser,hist);
 });
 
 //sets the interest level of each user on the profile page
