@@ -44,7 +44,8 @@ Login</h1>
 
 <div data-role="page" id="home">
     <div data-theme="a" data-role="header">
-     <a id="refreshbutton" class="ui-btn-right" data-transition="pop">Refresh</a>
+     <a id="refreshbutton" class="ui-btn-left" data-transition="pop">Refresh</a>
+     <a id="assignbutton" class="ui-btn-right" data-transition="pop">Assign</a>
         <h3>
             INBOX
         </h3>
@@ -70,40 +71,10 @@ Login</h1>
         <h1>DCRM</h1>
     </div>              
 </div>
-<!-- 
-<div data-role="page" id="sortednew">
-    <div data-theme="a" data-role="header">
-        <h3>
-            CONTACTS
-        </h3>
-    </div>  
-    <div data-role="navbar" data-theme="a">
-    <ul>
-    <li><a href="" class="ui-btn-active ui-state-persist" id="newsort">New</a></li>
-    <li><a href="" class="ui-btn-active ui-state-persist" id="groupsort">Group</a></li>
-    <li><a href="" class="ui-btn-active ui-state-persist" id="interestsort">Interest</a></li>
-    <li><a href="" class="ui-btn-active ui-state-persist" id="recentsort">Recent</a></li>
-    </ul>
-    </div>      
-    
-    <div data-role="content">
-
-        <div class="example-wrapper" data-iscroll>
-            <ul data-role="listview"  id="contact-list" data-theme="a">
-                
-            </ul>
-        </div>
-    </div>
-    <div data-theme="a" data-role="footer">
-        <h1>DCRM</h1>
-    </div>              
-</div> -->
-
-
 <div data-role="page" id="contact-info">
     <div data-theme="a" data-role="header">
         <a href="#home" class="ui-btn-left" data-transition="slide" data-direction="reverse">Back</a>
-        <a href="#profile" class="ui-btn-right" data-transition="slide" id="profilelink">Profile</a>                        
+        <a href="" class="ui-btn-right" data-transition="slide" id="profilelink">Profile</a>                        
         <h3>
             MESSAGES
         </h3>
@@ -125,28 +96,22 @@ Login</h1>
     </div>
     <div role="main" class="ui-content">
         <img src="" alt="image" data-controltype="image" id="profileimage" height="100" width="100">
-        <div data-controltype="textblock">
-        <p style="text-align: left;">
+        <div data-controltype="textblock" style="float:right;">
                     <span style="font-size: 24px;" id="profileusername">
                         
                     </span>
                     <img src="" alt="service logo" height="18" width="18" data-controltype="image" id="servicelogo">
-                </a>
-            </p>
-           
-        </div>
-        <div data-controltype="textblock">
-            <p style="text-align: left;">
                 <a data-mce-href="" href=""
                 style="" id="nameedit">
                     <span style="font-size: x-small;">
-                        <b>
+                        <br><b>
                             Edit name
                         </b>
                     </span>
                 </a>
-            </p>
+           
         </div>
+                
         <hr style="height:3px; background-color:#ccc; border:0; margin-top:12px; margin-bottom:12px;">
         <div data-controltype="textblock">
             <p style="text-align: center;">
@@ -188,22 +153,11 @@ Login</h1>
                    </fieldset>
                    </form>
         </div>
-             <!--   <option value="conversation">
-                    Conversation
-                </option>
-                <option value="scheduledate">
-                    Schedule Date
-                </option>
-                <option value="archive">
-                    Archive
-                </option>
-                <option value="unsorted">
-                    Unsorted
-                </option>
-            </select>
-        </div> -->
-        <hr style="height:3px; background-color:#ccc; border:0; margin-top:12px; margin-bottom:12px;">
-        <div data-controltype="textblock">
+        <div data-role="content" id="profilenav">
+        <a data-role="button" id="nav-btn" style="float:left;"> < Prev</a>
+        <a data-role="button" id="nav-btn" style="float:right;">Next ></a>
+        </div>
+        <div data-controltype="textblock" id="historycontainer">
             <p style="text-align: center;">
                 <b>
                     Communication Summary
