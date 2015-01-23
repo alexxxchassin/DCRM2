@@ -183,6 +183,7 @@ function renderProfile(username, hist) {
     }
     if (hist === "Y") {
         $("#profilenav").hide();
+        $("#historycontainer").show();
     timestamp = timeConverter(timestamp);
     if (recentSender === null) {
         $('#commhist').append('No messages yet...');
@@ -192,6 +193,7 @@ function renderProfile(username, hist) {
 }
 else {
 $("#historycontainer").hide();
+$("#profilenav").show();
 }
 
 $('input[type=radio][value=' + user.interestLevel + ']').attr('checked', true);
@@ -282,11 +284,29 @@ $.mobile.changePage( "#profile", { transition: "slide"});
 renderProfile(userNameClicked,hist);
 });
 
+var usercount = 0;
+
 $(document).on('click','#assignbutton', function() {
 var hist = "N"
-var firstUser = messageData.users[0].username
+var firstUser = messageData.users[usercount].username
 $.mobile.changePage( "#profile", { transition: "slide"});
 renderProfile(firstUser,hist);
+});
+
+$(document).on('click','#assignnext', function() {
+var hist = "N"
+usercount++
+var nextUser = messageData.users[usercount].username
+$.mobile.changePage( "#profile", { transition: "slide"});
+renderProfile(nextUser,hist);
+});
+
+$(document).on('click','#assignprev', function() {
+var hist = "N"
+usercount--
+var prevUserUser = messageData.users[usercount].username
+$.mobile.changePage( "#profile", { transition: "slide"});
+renderProfile(prevUser,hist);
 });
 
 //sets the interest level of each user on the profile page
