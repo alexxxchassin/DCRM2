@@ -68,14 +68,17 @@ class DCRMJsonEncoder(json.JSONEncoder):
 			
 		return json.JSONEncoder.default(self, obj)
 
-def populateData(user, okcUser):
+def getData(user, okcUser, start, num):
 	jsonData = list()
-	for inbox in okcUser.inbox[:30]:
+	#end = len(okcUser.inbox)
+	#if start + num < end:
+	end = start + num
+
+	for inbox in okcUser.inbox[start : end]:
 		userEntry = dict()
 		userEntry['username'] = inbox.correspondent
 		userEntry['service'] = "okc"
 
-		
 		try:
 			photoInfos = inbox.correspondent_profile.photo_infos
 		except:
@@ -98,9 +101,8 @@ def populateData(user, okcUser):
 		userEntry['messages'] = messages
 
 		jsonData.append(userEntry)
+	return jsonData
 
-	user.data_json = json.dumps(jsonData, cls=DCRMJsonEncoder)
-	user.save()
 
 @jsonp
 def login(request):
@@ -126,34 +128,10 @@ def login(request):
 
 		response['id'] = user.id
 		response['authcode'] = user.authcode
-		if not user.data_json:
-			populateData(user, okcUser)
-
 	else:
 		return HttpResponse(json.dumps(form.errors), content_type="application/json", status=400)
 
 	return HttpResponse(json.dumps(response), content_type="application/json")
-
-# Create your views here.
-@jsonp
-def generate(request):
-	response = dict()
-
-	response['result'] = True
-
-	requestData = getRequestData(request)
-
-	userId = requestData['id']
-
-	user = User.objects.get(id=userId)
-	session = okcupyd.Session.login(user.username, user.password)
-	okcUser = okcupyd.User(session)
-	
-	populateData(user, okcUser)
-
-	response['data'] = json.loads(user.data_json)
-	
-	return HttpResponse(json.dumps(response, cls=DCRMJsonEncoder), content_type="application/json")
 
 def main(request):
    return render_to_response('dcrm/main.html')
@@ -166,6 +144,13 @@ def data(request):
 	if (form.is_valid()):
 		userId = form.cleaned_data['id']
 		authcode = form.cleaned_data['authcode']
+		start = form.cleaned_data['start']
+		num = form.cleaned_data['num']
+
+		if not start:
+			start = 0
+		if not num:
+			num = 5
 
 		try:
 			user = User.objects.get(id=userId, authcode=authcode)
@@ -174,11 +159,14 @@ def data(request):
 			response['error'] = "Id and auth code invalid"
 			return HttpResponse(json.dumps(response), content_type="application/json")
 
-		response['users'] = json.loads(user.data_json)
+		session = okcupyd.Session.login(user.username, user.password)
+		okcUser = okcupyd.User(session)
+
+		response['users'] = getData(user, okcUser, start, num)
 
 	else:
 		return HttpResponse(json.dumps(form.errors), content_type="application/json", status=400)
 
-	return HttpResponse(json.dumps(response), content_type="application/json")
+	return HttpResponse(json.dumps(response, cls=DCRMJsonEncoder), content_type="application/json")
 
 
