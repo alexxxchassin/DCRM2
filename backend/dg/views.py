@@ -78,6 +78,7 @@ def getData(user, okcUser, start, num):
 		userEntry = dict()
 		userEntry['username'] = inbox.correspondent
 		userEntry['service'] = "okc"
+		userEntry['gender'] = inbox.correspondent_profile.gender
 
 		try:
 			photoInfos = inbox.correspondent_profile.photo_infos
