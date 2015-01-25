@@ -164,7 +164,7 @@ def data(request):
 		okcUser = okcupyd.User(session)
 
 		response['users'] = getData(user, okcUser, start, num)
-
+		response['loggedinuser'] = user.username
 	else:
 		return HttpResponse(json.dumps(form.errors), content_type="application/json", status=400)
 
