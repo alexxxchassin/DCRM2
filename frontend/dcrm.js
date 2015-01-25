@@ -114,17 +114,33 @@ function renderUsers(result) {
 
     $('#contact-list').listview('refresh');
     messageSorter(messageData.users);
+   // $('.scroll').jscroll({
+//loadingHtml: '<small>Loading...</small>',
+//callback: scrollMore,
+//debug: true
+//});
 }
 
-var idAuthCode = null
+function scrollMore() {
+    ajaxRenderUsers(messageData.users, currentPosition, 5);
+console.log("I've been called");
+}
+
+var idAuthCode = null;
+var currentPosition = null;
+var currentStart = null;
+var currentNum = null;
 
 function afterLogin(result) {
 idAuthCode = result;
 $.mobile.changePage( "#home", { transition: "slide", changeHash: false });
 }
 
-function ajaxRenderUsers(info) {
-var url = "http://dcrm.derektest1.com/data/?" + "id=" + info.id + "&authcode=" + info.authcode
+function ajaxRenderUsers(info, start, num) {
+var url = "http://dcrm.derektest1.com/data/?" + "id=" + info.id + "&authcode=" + info.authcode + "&start=" + start + "&num=" + num
+currentPosition = start + num
+currentStart = start
+currentNum = num
     $.ajax({
         url: url,
         dataType: "jsonp",
@@ -135,6 +151,7 @@ var url = "http://dcrm.derektest1.com/data/?" + "id=" + info.id + "&authcode=" +
         }
         
     });
+
 }
 
 function interestSorter(info) {
@@ -219,7 +236,7 @@ var userinfo = $("#loginform").serialize()
  });
 
 $(document).on('pagebeforeshow', '#home', function(){      
-ajaxRenderUsers(idAuthCode);
+ajaxRenderUsers(idAuthCode, 0, 15);
 $('#contact-list').empty();
 });
 
@@ -243,8 +260,8 @@ $(document).on('pagebeforeshow', '#contact-info', function(){
 });
 
 $(document).on('click', '#refreshbutton', function() {
-var url = "http://dcrm.derektest1.com/generate/?" + "id=" + idAuthCode.id
-console.log(url)
+var url = "http://dcrm.derektest1.com/data/?" + "id=" + idAuthCode.id + "&start=" + currentStart + "&num=" + currentNum
+
        $.ajax({
         url: url,
         dataType: "jsonp",
@@ -254,6 +271,7 @@ console.log(url)
             alert('Network error has occurred please try again!');
         }
 });
+       $("#contact-list").listview("refresh");
 });
 
 //displays the contact info page with the messaging history for the individual user
