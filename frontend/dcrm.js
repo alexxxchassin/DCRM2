@@ -18,18 +18,21 @@ function timeConverter(unconvertedTime){
 }
         // function to calculate the most recent sender for a message
 
-function getLastSender (messages) {
+function getLastSender (user) {
     var lastTime = null;
     var lastSender = null;
-    for (message in messages) {
-        if (!lastTime || lastTime < messages[message].time_stamp) {
-            lastSender = messages[message].sender;
+    for (message in user.messages) {
+        if (!lastTime || lastTime < user.messages[message].time_stamp) {
+            lastSender = user.messages[message].sender;
             
         }
-        if (lastSender === "GregNYC2014") {
+        if (lastSender === messageData.loggedinuser) {
             lastSender = "You"
         } else {
+                if (user.gender === "Woman") {
                 lastSender = "Her"
+                }
+                else {lastSender = "Him"}
         }
     }
     return lastSender;
@@ -54,7 +57,7 @@ function messageSorter(users) {
     $('#contact-list').empty();
     $.each(messageData.users, function(i, user) {
         timestamp = getLastTimestamp(user.messages);
-        recentSender = getLastSender(user.messages);
+        recentSender = getLastSender(user);
         timestamp = timeConverter(timestamp);
         if (timestamp === "45 years ago") {
             $('#contact-list').append('<li><img class="ui-li-thumb" src="' + user.profile_url + '" alt="image" id="contactlistimage_' + user.username+ '" height="30" width="30"><a href="" data-id="' + user.username + '">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + user.username + '</a></li>');
@@ -197,6 +200,9 @@ function renderProfile(username, hist) {
     recentSender = getLastSender(user.messages);
     if (recentSender === "Her") {
         recentSender = "She"
+    }
+    else {
+        recentSender = "He"
     }
     if (hist === "Y") {
         $("#profilenav").hide();
