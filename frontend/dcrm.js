@@ -197,7 +197,7 @@ function renderProfile(username, hist) {
     var timestamp = null;
     var recentSender = null;
     timestamp = getLastTimestamp(user.messages);
-    recentSender = getLastSender(user.messages);
+    recentSender = getLastSender(user);
     if (recentSender === "Her") {
         recentSender = "She"
     }
