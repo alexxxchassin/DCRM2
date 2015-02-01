@@ -9,8 +9,8 @@ from django.shortcuts import render_to_response
 
 import okcupyd
 
-from dg.models import User
-from dg.forms import UsernamePasswordForm, IdAndAuthForm
+from dg.models import User, ExtraData
+from dg.forms import UsernamePasswordForm, IdAndAuthForm, ExtraDataForm
 
 def jsonp(f):
     """Wrap a json response in a callback, and set the mimetype (Content-Type) header accordingly 
@@ -68,7 +68,13 @@ class DCRMJsonEncoder(json.JSONEncoder):
 			
 		return json.JSONEncoder.default(self, obj)
 
-def getData(user, okcUser, start, num):
+def getExtraDataFromCache(username, extraDataCache):
+	for extraData in extraDataCache:
+		if extraData.other_username == username:
+			return json.loads(extraData.data_json)
+	return None
+
+def getData(user, okcUser, start, num, extraDataCache):
 	jsonData = list()
 	#end = len(okcUser.inbox)
 	#if start + num < end:
@@ -100,6 +106,11 @@ def getData(user, okcUser, start, num):
 
 				messages.append(msgEntry)
 		userEntry['messages'] = messages
+
+		extraData = getExtraDataFromCache(inbox.correspondent, extraDataCache)
+		if extraData:
+			for key, value in extraData.iteritems():
+				userEntry[key] = value
 
 		jsonData.append(userEntry)
 	return jsonData
@@ -134,6 +145,46 @@ def login(request):
 
 	return HttpResponse(json.dumps(response), content_type="application/json")
 
+@jsonp
+def update(request):
+	response = dict({'result': True})
+	form = ExtraDataForm(getRequestData(request))
+
+	if (form.is_valid()):
+		userId = form.cleaned_data['id']
+		authcode = form.cleaned_data['authcode']
+		other_username = form.cleaned_data['other_username']
+		data_json = form.cleaned_data['data_json']
+
+		try:
+			user = User.objects.get(id=userId, authcode=authcode)
+		except User.DoesNotExist:
+			response['result'] = False
+			response['error'] = "Id and auth code invalid"
+			return HttpResponse(json.dumps(response), content_type="application/json")
+
+		try:
+			extraData = ExtraData.objects.get(user=user, other_username=other_username)
+		except ExtraData.DoesNotExist:
+			extraData = ExtraData(user=user, other_username=other_username)
+
+		try:
+			data = json.loads(data_json)
+			extraData.data_json = data_json
+			extraData.save()
+
+			response["other_username"] = other_username
+			for key,value in data.iteritems():
+				response[key] = value
+		except Exception, e:
+			response["result"] = False
+			response["error"] = "Could not decode data_json: %s" % e
+
+	else:
+		return HttpResponse(json.dumps(form.errors), content_type="application/json", status=400)
+
+	return HttpResponse(json.dumps(response, cls=DCRMJsonEncoder), content_type="application/json")
+
 def main(request):
    return render_to_response('dcrm/main.html')
 
@@ -163,7 +214,9 @@ def data(request):
 		session = okcupyd.Session.login(user.username, user.password)
 		okcUser = okcupyd.User(session)
 
-		response['users'] = getData(user, okcUser, start, num)
+		extraDataCache = ExtraData.objects.filter(user=user)
+
+		response['users'] = getData(user, okcUser, start, num, extraDataCache)
 		response['loggedinuser'] = user.username
 	else:
 		return HttpResponse(json.dumps(form.errors), content_type="application/json", status=400)

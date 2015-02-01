@@ -9,3 +9,9 @@ class User(models.Model):
 	authcode = models.CharField(max_length=100)
 	service = models.CharField(max_length=100, default="okc")
 	data_json = models.TextField(null=True)
+
+
+class ExtraData(models.Model):
+	user = models.ForeignKey(User, db_index=True)
+	other_username = models.CharField(max_length=100)
+	data_json = models.TextField()
