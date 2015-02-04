@@ -208,7 +208,7 @@ function renderProfile(username, hist) {
         $("#profilenav").hide();
         $("#historycontainer").show();
     timestamp = timeConverter(timestamp);
-    if (recentSender === null) {
+    if (timestamp === "45 years ago") {
         $('#commhist').append('No messages yet...');
     } else {
         $('#commhist').append(recentSender + " sent the last message " + timestamp + ".");
@@ -242,7 +242,7 @@ var userinfo = $("#loginform").serialize()
  });
 
 $(document).on('pagebeforeshow', '#home', function(){      
-ajaxRenderUsers(idAuthCode, 0, 15);
+ajaxRenderUsers(idAuthCode, 0, 10);
 $('#contact-list').empty();
 });
 
@@ -337,6 +337,17 @@ renderProfile(prevUser,hist);
 $(document).on('click','#interestselect', function() {
 var user = getUser(messageData.users, userNameClicked)
 user.interestLevel = $('input[name=interestbutton]:checked').val()
+var url = "http://dcrm.derektest1.com/update/?" + "id=" + idAuthCode.id + "&authcode=" + idAuthCode.authcode
+
+       $.ajax({
+        url: url,
+        dataType: "jsonp",
+        async: true,
+        success: alert("Refresh in progress"),
+        error: function (request,error) {
+            alert('Network error has occurred please try again!');
+        }
+});
 });
 
 //sets the status of each user on the profile page
