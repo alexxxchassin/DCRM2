@@ -76,43 +76,51 @@ def getExtraDataFromCache(username, extraDataCache):
 
 def getData(user, okcUser, start, num, extraDataCache):
 	jsonData = list()
-	#end = len(okcUser.inbox)
-	#if start + num < end:
-	end = start + num
 
-	for inbox in okcUser.inbox[start : end]:
+	count = 0
+	pos = start
+
+	while count < num:
+		inbox = okcUser.inbox[pos]
 		userEntry = dict()
 		userEntry['username'] = inbox.correspondent
 		userEntry['service'] = "okc"
-		userEntry['gender'] = inbox.correspondent_profile.gender
 
 		try:
-			photoInfos = inbox.correspondent_profile.photo_infos
+			userEntry['gender'] = inbox.correspondent_profile.gender
+
+			try:
+				photoInfos = inbox.correspondent_profile.photo_infos
+			except:
+				photoInfos = list()
+					
+			if len(photoInfos) > 0:
+				userEntry['profile_url'] = photoInfos[0].jpg_uri
+			else:
+				userEntry['profile_url'] = "http://upload.wikimedia.org/wikipedia/commons/c/c7/Puppy_on_Halong_Bay.jpg"
+
+			messages = list()
+			if inbox.has_messages:
+				for msg in inbox.messages:
+					msgEntry = dict()
+					msgEntry['sender'] = msg.sender.username
+					msgEntry['content'] = msg.content
+					msgEntry['time_stamp'] = msg.time_sent
+
+					messages.append(msgEntry)
+			userEntry['messages'] = messages
+
+			extraData = getExtraDataFromCache(inbox.correspondent, extraDataCache)
+			if extraData:
+				for key, value in extraData.iteritems():
+					userEntry[key] = value
+
+			jsonData.append(userEntry)
+			count += 1
 		except:
-			photoInfos = list()
-				
-		if len(photoInfos) > 0:
-			userEntry['profile_url'] = photoInfos[0].jpg_uri
-		else:
-			userEntry['profile_url'] = "http://upload.wikimedia.org/wikipedia/commons/c/c7/Puppy_on_Halong_Bay.jpg"
+			pass
+		pos += 1
 
-		messages = list()
-		if inbox.has_messages:
-			for msg in inbox.messages:
-				msgEntry = dict()
-				msgEntry['sender'] = msg.sender.username
-				msgEntry['content'] = msg.content
-				msgEntry['time_stamp'] = msg.time_sent
-
-				messages.append(msgEntry)
-		userEntry['messages'] = messages
-
-		extraData = getExtraDataFromCache(inbox.correspondent, extraDataCache)
-		if extraData:
-			for key, value in extraData.iteritems():
-				userEntry[key] = value
-
-		jsonData.append(userEntry)
 	return jsonData
 
 
